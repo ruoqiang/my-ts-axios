@@ -1,10 +1,10 @@
-import { AxiosRequestConfig, AxiosResponse } from './types'
+import { AxiosRequestConfig, AxiosResponse } from '../types'
 
-import { AxiosPromise } from './types/index'
+import { AxiosPromise } from '../types/index'
 
-import { parseHeaders } from './helpers/headers'
+import { parseHeaders } from '../helpers/headers'
 
-import { CrateError } from './helpers/error'
+import { CrateError } from '../helpers/error'
 // export default function xhr(config: AxiosRequestConfig): void {
 //   const { data = null, url, method = 'get', headers={} } = config
 
@@ -29,7 +29,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     if (responseType) {
       request.responseType = responseType
     }
-    request.open(method.toUpperCase(), url, true)
+    request.open(method.toUpperCase(), url!, true)
 
     request.onreadystatechange = function handleLoad() {
       if (request.readyState !== 4) { // meaning the load is complete
@@ -54,7 +54,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       handleResponse(response)
     }
     function handleResponse(response: AxiosResponse) {
-      if (response.status > 200 && response.status < 300) {
+      if (response.status >= 200 && response.status < 300) { // 注意这里是>= 200 而不是 > 200, 200状态表示成功，否则当请求状态码刚好为200时也会判为出错--> Request failed with status code 200
         resolve(response)
       } else {
         // reject(new Error(`Request failed with status code ${response.status}`))

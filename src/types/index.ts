@@ -1,11 +1,12 @@
-import { config } from "shelljs";
+import { config, head } from "shelljs";
 import { request } from "http";
+import { puts } from "util";
 
 export type Method =
   | 'get'
   | 'GET'
   | 'delete'
-  | 'Delete'
+  | 'DELETE'
   | 'head'
   | 'HEAD'
   | 'options'
@@ -18,13 +19,15 @@ export type Method =
   | 'PATCH'
 
 export interface AxiosRequestConfig {
-  url: string
+  url?: string
   method?: Method
   data?: any
   params?: any,
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+
+  [propName: string]: any
 }
 
 export interface AxiosResponse {
@@ -43,4 +46,45 @@ export interface AxiosError extends Error {
   request?: any
   response?: AxiosResponse
   isAxiosError: boolean
+}
+
+// 定义一个 Axios 类型接口，它描述了 Axios 类中的公共方法
+export interface Axios{
+
+  request(config:AxiosRequestConfig):AxiosPromise
+
+  get(url:string,config?:AxiosRequestConfig):AxiosPromise
+
+  delete(url:string,config?:AxiosRequestConfig):AxiosPromise
+
+  head(url:string,config?:AxiosRequestConfig):AxiosPromise
+
+  options(url:string,config?:AxiosRequestConfig):AxiosPromise
+
+  post(url:string,data?:any,config?:AxiosRequestConfig):AxiosPromise
+
+  put(url:string,data?:any,config?:AxiosRequestConfig):AxiosPromise
+
+  patch(url:string,data?:any,config?:AxiosRequestConfig):AxiosPromise
+
+}
+
+export interface AxiosInstance extends Axios{
+
+  (config:AxiosRequestConfig):AxiosPromise
+
+}
+
+// 拦截器管理对象对外的接口
+export interface AxiosInterceptorManager<T> {
+  use(resolve:ResolvedFn<T>,rejected?:RejectedFn):number
+
+  eject(id:number):void
+}
+export interface ResolvedFn<T=any> {
+  (val:T):T | Promise<T>
+}
+
+export interface RejectedFn<T=any> {
+  (error:any):any
 }
