@@ -11,7 +11,7 @@ export default class InterceptorManager<T> {
     constructor() {
         this.interceptors = []
     }
-
+    // 添加拦截器到 interceptors 中
     use(resolved: ResolvedFn, rejected?: RejectedFn): number {
         this.interceptors.push({
             resolved,
@@ -19,7 +19,7 @@ export default class InterceptorManager<T> {
         })
         return this.interceptors.length - 1
     }
-
+    // 遍历 interceptors
     forEach(fn: (interceptor: Interceptor<T>) => void): void {
         
         this.interceptors.forEach(interceptor => {
@@ -28,7 +28,7 @@ export default class InterceptorManager<T> {
             }
         })
     }
-
+    // 删除一个拦截器
     eject(id:number):void {
         if(this.interceptors[id]) {
             this.interceptors[id] = null

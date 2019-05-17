@@ -1,11 +1,14 @@
-import { AxiosRequestConfig, AxiosPromise, Method, RejectedFn, ResolvedFn, AxiosResponse, AxiosInterceptorManager } from '../types'
+import { AxiosRequestConfig, AxiosPromise, Method, RejectedFn, ResolvedFn, AxiosResponse } from '../types'
 
 import dispatchRequest from './dispatchRequest'
 import InterceptorManager from './InterceptorManager'
 
+import defaults from '../defaults'
 interface Interceptors {
-    request: AxiosInterceptorManager<AxiosRequestConfig>
-    response: AxiosInterceptorManager<AxiosResponse>
+    // request: AxiosInterceptorManager<AxiosRequestConfig>  //导致this.interceptors.request.forEach  类型“AxiosInterceptorManager<AxiosRequestConfig>”上不存在属性“forEach”。
+    // response: AxiosInterceptorManager<AxiosResponse>
+    request: InterceptorManager<AxiosRequestConfig>
+    response: InterceptorManager<AxiosResponse>
 }
 
 interface PromiseChain<T> {
@@ -14,10 +17,13 @@ interface PromiseChain<T> {
 }
 
 export default class Axios {
+    defaults:AxiosRequestConfig
 
     interceptors: Interceptors
 
-    constructor() {
+    constructor(initConfig:AxiosRequestConfig) {
+        this.defaults = initConfig
+        debugger
         this.interceptors = { // Interceptors 类型拥有 2 个属性，一个请求拦截器管理类实例，一个是响应拦截器管理类实例
             request: new InterceptorManager<AxiosRequestConfig>(),
             response: new InterceptorManager<AxiosResponse>()

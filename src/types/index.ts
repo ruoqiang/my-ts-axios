@@ -30,7 +30,7 @@ export interface AxiosRequestConfig {
   [propName: string]: any
 }
 
-export interface AxiosResponse {
+export interface AxiosResponse<T=any> {
   data: any
   status: number
   statusText: string
@@ -50,6 +50,12 @@ export interface AxiosError extends Error {
 
 // 定义一个 Axios 类型接口，它描述了 Axios 类中的公共方法
 export interface Axios{
+
+
+  interceptors: {
+    request:AxiosInterceptorManager<AxiosRequestConfig>
+    response:AxiosInterceptorManager<AxiosResponse>
+  }
 
   request(config:AxiosRequestConfig):AxiosPromise
 
