@@ -78,12 +78,15 @@ router.get('/error/timeout', function(req, res) {
 })
 
 router.get('/interceptor/get', function(req, res) {
-  res.end('hello')
+  res.json({
+    data: 'hello'
+  })
+  res.end()
 })
 
 
 registerExtendRouter()
-
+registerConfigRouter()
 
 
 
@@ -135,7 +138,13 @@ function registerExtendRouter() {
   })
 }
 
-
+function registerConfigRouter () {
+  router.post('/config/post', function(req, res) {
+    res.json({
+      data:req.body
+    })
+  })
+}
 
 
 const port = process.env.PORT || 8888

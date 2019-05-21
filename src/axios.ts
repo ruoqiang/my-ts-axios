@@ -23,5 +23,5 @@ function createInstance(config:AxiosRequestConfig): AxiosInstance {
   return instance as AxiosInstance
 }
 
-const axios = createInstance(defaults)
+const axios = createInstance(defaults) // 把默认配置传进去
 export default axios

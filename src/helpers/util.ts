@@ -18,3 +18,24 @@ export function extend<T, U>(to: T, from: U): T & U {
   }
   return to as T & U
 }
+
+export function deepMerge(...objs:any[]):any{
+  const result = Object.create(null)
+  objs.forEach(obj=>{
+    if(obj) {
+      Object.keys(obj).forEach(key=>{ // Object.keys(obj) obj的key集合
+        const val = obj[key] // 每一项的值
+        if(isObject(val)) {
+          if(isObject(result[key])) {
+            result[key] =deepMerge(result[key],val) // 递归
+          }else {
+            result[key] = deepMerge({},val)
+          }
+        }else {
+          result[key] = val
+        }
+      })
+    }
+  })
+return result
+}

@@ -3,7 +3,7 @@ import { AxiosRequestConfig, AxiosPromise, Method, RejectedFn, ResolvedFn, Axios
 import dispatchRequest from './dispatchRequest'
 import InterceptorManager from './InterceptorManager'
 
-import defaults from '../defaults'
+import mergeConfig from './mergeConfig';
 interface Interceptors {
     // request: AxiosInterceptorManager<AxiosRequestConfig>  //导致this.interceptors.request.forEach  类型“AxiosInterceptorManager<AxiosRequestConfig>”上不存在属性“forEach”。
     // response: AxiosInterceptorManager<AxiosResponse>
@@ -17,13 +17,13 @@ interface PromiseChain<T> {
 }
 
 export default class Axios {
-    defaults:AxiosRequestConfig
+    defaults: AxiosRequestConfig
 
     interceptors: Interceptors
 
-    constructor(initConfig:AxiosRequestConfig) {
+    constructor(initConfig: AxiosRequestConfig) {
         this.defaults = initConfig
-        debugger
+        
         this.interceptors = { // Interceptors 类型拥有 2 个属性，一个请求拦截器管理类实例，一个是响应拦截器管理类实例
             request: new InterceptorManager<AxiosRequestConfig>(),
             response: new InterceptorManager<AxiosResponse>()
@@ -34,35 +34,37 @@ export default class Axios {
     // }
 
     request(url: any, config?: any): AxiosPromise {
-        
+
         if (typeof url === 'string') {
             if (!config) {
-              config = {}
+                config = {}
             }
             config.url = url
-          } else {
+        } else {
             config = url
-          }
+        }
+
+        config = mergeConfig(this.defaults, config)
 
         const chain: PromiseChain<any>[] = [{
-            resolved:dispatchRequest,
-            rejected:undefined
+            resolved: dispatchRequest,
+            rejected: undefined
         }]
-        
-        this.interceptors.request.forEach(interceptor=>{
-            
+
+        this.interceptors.request.forEach(interceptor => {
+
             chain.unshift(interceptor) // 添加到数组的开头
         })
 
-        this.interceptors.response.forEach(interceptor=>{
+        this.interceptors.response.forEach(interceptor => {
             chain.push(interceptor)
         })
 
         let promise = Promise.resolve(config)
 
-        while(chain.length) {
-            const {resolved,rejected} = chain.shift()!
-            promise = promise.then(resolved,rejected)
+        while (chain.length) {
+            const { resolved, rejected } = chain.shift()!
+            promise = promise.then(resolved, rejected)
         }
 
         return promise

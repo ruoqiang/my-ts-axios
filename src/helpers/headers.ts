@@ -19,7 +19,8 @@
 //     return headers
 // }
 
-import { isPlainObject } from './util'
+import { isPlainObject, deepMerge } from './util'
+import { Method } from '../types';
 
 function normalizeHeaderName(headers: any, normalizedName: string): void {
   if (!headers) {
@@ -65,4 +66,17 @@ export function parseHeaders(headers: string): any {
   })
 
   return parsed
+}
+export function flattenHeaders(headers: any, method: Method): any { // 通过 deepMerge 的方式把 common、post 的属性拷贝到 headers 这一级，然后再把 common、post 这些属性删掉
+  if (!headers) { // 没有headers 为什么还要return headers?
+    return headers
+  }
+  headers = deepMerge(headers.common || {}, headers[method] || {}, {}, headers)
+
+  const methodToDelete = ['delete', 'get', 'head', 'options', 'post', 'patch', 'put', 'common']
+  methodToDelete.forEach(method => {
+    delete headers[method]
+  })
+  
+  return headers
 }

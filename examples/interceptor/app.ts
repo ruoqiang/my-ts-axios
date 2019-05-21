@@ -1,5 +1,7 @@
 import axios from '../../src/index'
 
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencodeddddddd'
+
 axios.interceptors.request.use(config => {
   config.headers.test += '1'
   return config
@@ -14,15 +16,15 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(res => {
-  res += '1'
+  res.data += '1'
   return res
 })
 let interceptor = axios.interceptors.response.use(res => {
-  res += '2'
+  res.data += '2'
   return res
 })
 axios.interceptors.response.use(res => {
-  res += '3'
+  res.data += '3'
   return res
 })
 
