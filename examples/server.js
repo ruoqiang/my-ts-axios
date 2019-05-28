@@ -87,7 +87,7 @@ router.get('/interceptor/get', function(req, res) {
 
 registerExtendRouter()
 registerConfigRouter()
-
+registerCancelRouter()
 
 
 app.use(router)
@@ -152,7 +152,19 @@ function registerConfigRouter () {
     res.json(req.body)
   })
 }
+function registerCancelRouter () {
+  router.get('/cancel/get', function(req, res) {
+    setTimeout(() => {
+      res.json('hello')
+    }, 1000)
+  })
 
+  router.post('/cancel/post', function(req, res) {
+    setTimeout(() => {
+      res.json(req.body)
+    }, 1000)
+  })
+}
 const port = process.env.PORT || 8888
 module.exports = app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}, Ctrl+C to stop`)

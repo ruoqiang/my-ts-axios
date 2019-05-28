@@ -1,3 +1,5 @@
+// import Cancel from "../cancel/Cancel";
+
 export type Method =
   | 'get'
   | 'GET'
@@ -27,6 +29,8 @@ export interface AxiosRequestConfig {
 
   transformRequest?:AxiosTransformer | AxiosTransformer []
   transformResponse?:AxiosTransformer | AxiosTransformer []
+
+  cancelToken?:CancelToken
 }
 
 export interface AxiosTransformer {
@@ -97,8 +101,51 @@ export interface RejectedFn<T=any> {
   (error:any):any
 }
 
+
+
 export interface AxiosStatic extends AxiosInstance{
 
   create(config?: AxiosRequestConfig): AxiosInstance
 
+  CancelToken:CancelTokenStatic
+  Cancel:CancelStatic
+  isCancel:(value:any)=>boolean
+}
+
+export interface CancelToken { // 实例类型的接口定义
+  promise: Promise<Cancel>
+  reason?:Cancel
+
+  throwIfRequested():void
+}
+
+export interface Canceler { // 取消方法的接口定义
+  (message?:string):void
+}
+
+export interface CancelExcetor { // CancelToken 类构造函数参数的接口定义
+  (cancel:Canceler):void
+}
+
+
+// export interface CancelTokenSource {
+//   token:CancelToken
+//   cancel:Cancel
+// }
+export interface CancelTokenSource {
+  token: CancelToken
+  cancel: Canceler
+}
+export interface CancelTokenStatic {
+  new(executor:CancelExcetor):CancelToken
+
+  source():CancelTokenSource
+}
+
+export interface Cancel {
+  message?: string
+}
+
+export interface CancelStatic {
+  new (message?: string): Cancel
 }

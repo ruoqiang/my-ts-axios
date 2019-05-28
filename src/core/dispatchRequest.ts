@@ -11,6 +11,8 @@ function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
     return transformResponseData(res)
   })
 }
+ 
+
 
 function processConfig (config: AxiosRequestConfig): void {
   config.url = transformURL(config)
