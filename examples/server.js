@@ -138,14 +138,20 @@ function registerExtendRouter() {
   })
 }
 
+// function registerConfigRouter () {
+//   router.post('/config/post', function(req, res) {
+//     res.json({
+//       data:req.body
+//     })
+//   })
+// }
 function registerConfigRouter () {
+  
   router.post('/config/post', function(req, res) {
-    res.json({
-      data:req.body
-    })
+    console.log(req.body)
+    res.json(req.body)
   })
 }
-
 
 const port = process.env.PORT || 8888
 module.exports = app.listen(port, () => {

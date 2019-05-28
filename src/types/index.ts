@@ -1,7 +1,3 @@
-import { config, head } from "shelljs";
-import { request } from "http";
-import { puts } from "util";
-
 export type Method =
   | 'get'
   | 'GET'
@@ -22,14 +18,20 @@ export interface AxiosRequestConfig {
   url?: string
   method?: Method
   data?: any
-  params?: any,
+  params?: any
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
 
   [propName: string]: any
+
+  transformRequest?:AxiosTransformer | AxiosTransformer []
+  transformResponse?:AxiosTransformer | AxiosTransformer []
 }
 
+export interface AxiosTransformer {
+  (data:any,headers?:any):any
+}
 export interface AxiosResponse<T=any> {
   data: any
   status: number
@@ -93,4 +95,10 @@ export interface ResolvedFn<T=any> {
 
 export interface RejectedFn<T=any> {
   (error:any):any
+}
+
+export interface AxiosStatic extends AxiosInstance{
+
+  create(config?: AxiosRequestConfig): AxiosInstance
+
 }

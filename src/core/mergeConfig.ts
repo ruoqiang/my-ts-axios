@@ -8,11 +8,10 @@ function defaultStrat(val1: any, val2: any): any { // 优先选2
 }
 
 function fromVal2Strat(val1: any, val2: any): any {
-    if (typeof val2 !== 'undefined') {
-        return val2
-    }
+  if (typeof val2 !== 'undefined') {
+    return val2
+  }
 }
-
 const stratKeysFromVal2 = ['url', 'data', 'params'] // 因为对于 url、params、data 这些属性，默认配置显然是没有意义的，它们是和每个请求强相关的，所以我们只从自定义配置中获取
 
 stratKeysFromVal2.forEach((key) => {
@@ -25,15 +24,27 @@ function deepMergeStrat(val1:any,val2:any):any {
     }else if(typeof val2 !=='undefined') { // 存在且排查isPlainObject的情况
         return val2
     }else if(isPlainObject(val1)) { // val2不存在且排查val2是isPlainObject的情况
-        deepMerge(val1)
+        return deepMerge(val1) // 注意这里少了return的坑
     } else if(typeof val1 !== 'undefined') {
         return val1
     }
 }
+// function deepMergeStrat(val1: any, val2: any): any {
+//   if (isPlainObject(val2)) {
+//     return deepMerge(val1, val2)
+//   } else if (typeof val2 !== 'undefined') {
+//     return val2
+//   } else if (isPlainObject(val1)) {
+//     return deepMerge(val1)
+//   } else if (typeof val1 !== 'undefined') {
+//     return val1
+//   }
+// }
 
-const startKeysDeepMerge = ['headers']
 
-startKeysDeepMerge.forEach(key=>{
+const stratKeysDeepMerge = ['headers']
+
+stratKeysDeepMerge.forEach(key=>{
     strats[key] = deepMergeStrat
 })
 

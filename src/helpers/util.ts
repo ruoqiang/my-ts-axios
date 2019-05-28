@@ -12,6 +12,13 @@ export function isPlainObject(val: any): val is Object {
   return toString.call(val) === '[object Object]'
 }
 
+export function isFormData(val: any): val is FormData {
+  return typeof val !== 'undefined' && val instanceof FormData
+}
+
+export function isURLSearchParams(val: any): val is URLSearchParams { // typeof 只能检测 基本数据类型，包括boolean、undefined、string、number、symbol，而null ,Array、function、Object ,使用typeof出来都是Objec。无法检测具体是哪种引用类型。
+  return typeof val !== 'undefined' && val instanceof URLSearchParams
+}
 export function extend<T, U>(to: T, from: U): T & U {
   for (const key in from) {
     (to as T & U)[key] = from[key] as any
