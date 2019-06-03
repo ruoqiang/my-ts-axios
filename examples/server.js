@@ -8,6 +8,15 @@ const WebpackConfig = require('./webpack.config')
 const app = express()
 const compiler = webpack(WebpackConfig)
 
+const cookieParser = require('cookie-parser')
+
+const multipart = require('connect-multiparty') // 前端用multipart/form-data的形式上传数据，后端通过中间件connect-multipary接收。 
+const atob = require('atob')
+
+const path = require('path')
+
+require('./server2')
+
 app.use(webpackDevMiddleware(compiler, {
   publicPath: '/__build__/',
   stats: {
@@ -16,7 +25,11 @@ app.use(webpackDevMiddleware(compiler, {
   }
 }))
 
-
+app.use(express.static(__dirname, {
+  setHeaders (res) {
+    res.cookie('XSRF-TOKEN-D', '1234abc')
+  }
+}))
 
 
 app.use(webpackHotMiddleware(compiler))
@@ -25,6 +38,12 @@ app.use(express.static(__dirname))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(cookieParser())
+
+app.use(multipart({
+  uploadDir: path.resolve(__dirname, 'upload-file')
+}))
 
 //添加路由开始
 const router = express.Router()
@@ -88,7 +107,7 @@ router.get('/interceptor/get', function(req, res) {
 registerExtendRouter()
 registerConfigRouter()
 registerCancelRouter()
-
+registerMoreRouter()
 
 app.use(router)
 //添加路由结束
@@ -165,6 +184,48 @@ function registerCancelRouter () {
     }, 1000)
   })
 }
+function registerMoreRouter () {
+
+
+  
+  router.get('/more/get', function(req, res) {
+    res.json(req.cookies)
+  })
+
+  router.post('/more/upload', function(req, res) {
+    console.log(req.body, req.files)
+    res.end('upload success!')
+  })
+
+  router.post('/more/post', function(req, res) {
+    const auth = req.headers.authorization
+    const [type, credentials] = auth.split(' ')
+    console.log(atob(credentials))
+    const [username, password] = atob(credentials).split(':')
+    if (type === 'Basic' && username === 'Yee' && password === '123456') {
+      res.json(req.body)
+    } else {
+      res.status(401)
+      res.end('UnAuthorization')
+    }
+  })
+
+  router.get('/more/304', function(req, res) {
+    res.status(304)
+    res.json({a: 12})
+    res.end()
+  })
+
+  router.get('/more/A', function(req, res) {
+    res.end('A')
+  })
+
+  router.get('/more/B', function(req, res) {
+    res.end('B')
+  })
+}
+
+
 const port = process.env.PORT || 8888
 module.exports = app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}, Ctrl+C to stop`)

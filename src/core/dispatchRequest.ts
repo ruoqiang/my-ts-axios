@@ -1,31 +1,33 @@
-import { AxiosRequestConfig,AxiosPromise, AxiosResponse } from '../types'
-import { bulidURL } from '../helpers/url'
+import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
+import { bulidURL, isAbsoluteURL, combineURL } from '../helpers/url'
 import xhr from './xhr'
 import { transformRequest } from '../helpers/data'
 import { flattenHeaders } from '../helpers/headers'
-import transform from './transform';
+import transform from './transform'
 
 function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
   processConfig(config)
-  return xhr(config).then((res)=>{ // 由原来的return xhr(config)-所有返回项 变成现在的return transformResponseData(res) 只有data项
+  return xhr(config).then(res => {
+    // 由原来的return xhr(config)-所有返回项 变成现在的return transformResponseData(res) 只有data项
     return transformResponseData(res)
   })
 }
- 
 
-
-function processConfig (config: AxiosRequestConfig): void {
+function processConfig(config: AxiosRequestConfig): void {
   config.url = transformURL(config)
   // config.headers = transformHeaders(config)
   // config.data = transformRequestData(config)   -->
-  config.data = transform(config.data,config.headers,config.transformRequest)
+  config.data = transform(config.data, config.headers, config.transformRequest)
 
-  config.headers = flattenHeaders(config.headers,config.method!) // flattenHeaders拍平config.headers中的默认配置与自定义Method相关配置
+  config.headers = flattenHeaders(config.headers, config.method!) // flattenHeaders拍平config.headers中的默认配置与自定义Method相关配置
 }
 
-function transformURL(config: AxiosRequestConfig): string {
-  const { url, params } = config
-  return bulidURL(url!, params)
+export function transformURL(config: AxiosRequestConfig): string {
+  let { url, params, paramsSerializer, baseURL } = config
+  if (baseURL && !isAbsoluteURL(url!)) {
+    url = combineURL(baseURL, url)
+  }
+  return bulidURL(url!, params, paramsSerializer)
 }
 
 function transformRequestData(config: AxiosRequestConfig): any {
@@ -38,7 +40,6 @@ function transformRequestData(config: AxiosRequestConfig): any {
 // }
 
 function transformResponseData(res: AxiosResponse): AxiosResponse {
-  
   res.data = transform(res.data, res.headers, res.config.transformResponse)
   return res
 }

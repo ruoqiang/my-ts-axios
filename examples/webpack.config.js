@@ -3,7 +3,7 @@ const path = require('path')
 const webpack = require('webpack')
 
 module.exports = {
-  mode: 'none',
+  mode: 'development',
 
   /**
    * 我们会在 examples 目录下建多个子目录
@@ -52,6 +52,12 @@ module.exports = {
               transpileOnly: true
             }
           }
+        ]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader', 'css-loader'
         ]
       }
     ]
