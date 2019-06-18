@@ -25,8 +25,6 @@ export interface AxiosRequestConfig {
   responseType?: XMLHttpRequestResponseType
   timeout?: number
 
-  [propName: string]: any
-
   transformRequest?: AxiosTransformer | AxiosTransformer[]
   transformResponse?: AxiosTransformer | AxiosTransformer[]
 
@@ -46,6 +44,8 @@ export interface AxiosRequestConfig {
   paramsSerializer?: (parms: any) => string
 
   baseURL?: string
+
+  [propName: string]: any
 }
 
 export interface AxiosBasicCredentials {
@@ -57,7 +57,7 @@ export interface AxiosTransformer {
   (data: any, headers?: any): any
 }
 export interface AxiosResponse<T = any> {
-  data: any
+  data: T
   status: number
   statusText: string
   headers: any
@@ -104,6 +104,8 @@ export interface Axios {
 
 export interface AxiosInstance extends Axios {
   (config: AxiosRequestConfig): AxiosPromise
+
+  (url: string, config?: AxiosRequestConfig): AxiosPromise // 没有定义的话 axios('/foo') 报错
 }
 
 // 拦截器管理对象对外的接口

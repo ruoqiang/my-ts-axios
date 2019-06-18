@@ -17,6 +17,8 @@ const path = require('path')
 
 require('./server2')
 
+const axios = require('axios')
+
 app.use(webpackDevMiddleware(compiler, {
   publicPath: '/__build__/',
   stats: {
@@ -25,11 +27,17 @@ app.use(webpackDevMiddleware(compiler, {
   }
 }))
 
-app.use(express.static(__dirname, {
-  setHeaders (res) {
-    res.cookie('XSRF-TOKEN-D', '1234abc')
-  }
-}))
+
+
+// app.use(express.static(__dirname, {
+//   setHeaders (res) {
+//     res.cookie('XSRF-TOKEN-D', '1234abc')
+//   },
+//   setHeaders (res) {
+//     res.header('Referer', 'https://cyber.chepass.com/IndexPage/Index')
+//   }
+
+// }))
 
 
 app.use(webpackHotMiddleware(compiler))
@@ -223,6 +231,43 @@ function registerMoreRouter () {
   router.get('/more/B', function(req, res) {
     res.end('B')
   })
+  const cors = {
+    'Access-Control-Allow-Origin': 'https://cyber.chepass.com',
+    'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  }
+
+  // router.get('/more/OpenCard', function(req, res) {
+  //   res.end('B')
+  // })
+  router.get('/more/OpenCard', function(req, res) {
+    // res.set(cors)
+    // res.json(req.body)
+    // res.end('Bddd') 
+    // 等打包后使用自己的axios试试
+    axios.get('https://cyber.chepass.com/System/Stats/OpenCard', {
+      // headers: {
+      //   referer: 'https://cyber.chepass.com/',
+      //   host: 'cyber.chepass.com'
+      // },
+      // params: req.query
+    }).then((response) => {
+      let ret = response.data
+      // if (typeof ret === 'string') {
+      //   const reg = /^\w+\(({.+})\)$/
+      //   const matches = ret.match(reg)
+      //   if (matches) {
+      //     ret = JSON.parse(matches[1])
+      //   }
+      // }
+      res.json(ret)
+      // res.end('Bddd')
+    }).catch((e) => {
+      console.log(e)
+    })
+  })
+  // https://cyber.chepass.com/System/Stats/OpenCard
 }
 
 

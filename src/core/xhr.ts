@@ -4,7 +4,7 @@ import { AxiosPromise } from '../types/index'
 
 import { parseHeaders } from '../helpers/headers'
 
-import { CrateError } from '../helpers/error'
+import { crateError } from '../helpers/error'
 import { isURLSameOrigin } from '../helpers/url'
 import cookie from '../helpers/cookie'
 import { isFormData } from '../helpers/util'
@@ -30,7 +30,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       data = null,
       url,
       method = 'get',
-      headers,
+      headers = {},
       responseType,
       timeout,
       cancelToken,
@@ -67,10 +67,17 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     function processCancel(): void {
       // 取消相关逻辑
       if (cancelToken) {
-        cancelToken.promise.then(reason => {
-          request.abort()
-          reject(reason)
-        })
+        cancelToken.promise
+          .then(reason => {
+            request.abort()
+            reject(reason)
+          })
+          .catch(
+            /* istanbul ignore next */
+            () => {
+              // do nothing
+            }
+          )
       }
     }
 
@@ -108,7 +115,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         } else {
           // reject(new Error(`Request failed with status code ${response.status}`))
           reject(
-            CrateError(
+            crateError(
               `Request failed with status code ${response.status}`,
               config,
               null,
@@ -121,13 +128,13 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       // 网络错误
       request.onerror = function handleError() {
         // reject(new Error('Network Error'))
-        reject(CrateError('Network Error', config, null, request))
+        reject(crateError('Network Error', config, null, request))
       }
       // 超时错误
       request.ontimeout = function handleTimeout() {
         if (timeout) {
           // reject(new Error(`Timeout of ${timeout}ms exceeded `))
-          reject(CrateError(`Timeout of ${timeout}ms exceeded `, config, 'ECONNABORTED', request))
+          reject(crateError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request))
         }
       }
 

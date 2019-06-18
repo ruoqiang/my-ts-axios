@@ -16,10 +16,11 @@ export function bulidURL(url: string, params?: any, paramsSerializer?: (parsms: 
     return url
   }
   let serializedParams
+
   if (paramsSerializer) {
     serializedParams = paramsSerializer(params)
-    debugger
-  } else if (isURLSearchParams) {
+  } else if (isURLSearchParams(params)) {
+    // isURLSearchParams(params) 抄成了isURLSearchParams
     serializedParams = params.toString()
   } else {
     const parts: string[] = []
@@ -42,6 +43,7 @@ export function bulidURL(url: string, params?: any, paramsSerializer?: (parsms: 
         } else if (isPlainObject(val)) {
           val = JSON.stringify(val)
         }
+
         parts.push(`${encode(key)}=${encode(val)}`)
       })
     })

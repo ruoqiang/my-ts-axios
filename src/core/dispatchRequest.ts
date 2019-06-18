@@ -6,11 +6,21 @@ import { flattenHeaders } from '../helpers/headers'
 import transform from './transform'
 
 function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
+  // throwIfCancellationRequested(config)
   processConfig(config)
-  return xhr(config).then(res => {
-    // 由原来的return xhr(config)-所有返回项 变成现在的return transformResponseData(res) 只有data项
-    return transformResponseData(res)
-  })
+  return xhr(config).then(
+    res => {
+      // 由原来的return xhr(config)-所有返回项 变成现在的return transformResponseData(res) 只有data项
+      return transformResponseData(res)
+    },
+    e => {
+      // 除了对正常情况的响应数据做转换，我们也需要对异常情况的响应数据做转换。
+      if (e && e.response) {
+        e.response = transformResponseData(e.response)
+      }
+      return Promise.reject(e)
+    }
+  )
 }
 
 function processConfig(config: AxiosRequestConfig): void {

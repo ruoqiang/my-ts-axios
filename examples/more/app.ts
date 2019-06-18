@@ -5,15 +5,17 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 document.cookie = 'a=b'
 
-axios.get('/more/get').then(res => {
-  console.log(res)
-})
-
-axios.post('http://127.0.0.1:8089/more/server2', { }, {
-  withCredentials: true
+axios.get('/more/get',{
+  // headers:null
 }).then(res => {
   console.log(res)
 })
+
+// axios.post('http://127.0.0.1:8089/more/server2', { }, {
+//   withCredentials: true
+// }).then(res => {
+//   console.log(res)
+// })
 
 // const instance = axios.create({
 //     xsrfCookieName: 'XSRF-TOKEN-D',
@@ -116,12 +118,12 @@ axios.post('http://127.0.0.1:8089/more/server2', { }, {
 //   console.log(res)
 // })
 
-// axios.get('/more/get', {
-//   params: {
-//     a: 1,
-//     b: 2,
-//     c: ['a', 'b', 'c']
-//   }
+// axios.get('/more/OpenCard', {
+ 
+//     // headers: {
+//     //   referer: 'https://cyber.chepass.com/System/Stats/OpenCard',
+//     //   host: 'https://cyber.chepass.com/'
+//     // }
 // }).then(res => {
 //   console.log(res)
 // })
@@ -151,35 +153,35 @@ axios.post('http://127.0.0.1:8089/more/server2', { }, {
 
 // instance.get('https://img.mukewang.com/szimg/5becd5ad0001b89306000338-360-202.jpg')
 
-function getA() {
-  return axios.get('/more/A')
-}
+// function getA() {
+//   return axios.get('/more/A')
+// }
 
-function getB() {
-  return axios.get('/more/B')
-}
+// function getB() {
+//   return axios.get('/more/B')
+// }
 
-axios.all([getA(), getB()])
-  .then(axios.spread(function(resA, resB) {
+// axios.all([getA(), getB()])
+//   .then(axios.spread(function(resA, resB) {
     
-    console.log(resA.data)
-    console.log(resB.data)
-  }))
+//     console.log(resA.data)
+//     console.log(resB.data)
+//   }))
 
 
-axios.all([getA(), getB()])
-  .then(([resA, resB]) => {
-    console.log(resA.data)
-    console.log(resB.data)
-  })
-
-const fakeConfig = {
-  baseURL: 'https://www.baidu.com/',
-  url: '/user/12345',
-  params: {
-    idClient: 1,
-    idTest: 2,
-    testString: 'thisIsATest'
-  }
-}
-console.log(axios.getUri(fakeConfig))
+// axios.all([getA(), getB()])
+//   .then(([resA, resB]) => {
+//     console.log(resA.data)
+//     console.log(resB.data)
+//   })
+// // https://cyber.chepass.com/System/Stats/OpenCard
+// const fakeConfig = {
+//   baseURL: 'https://www.baidu.com/',
+//   url: '/user/12345',
+//   params: {
+//     idClient: 1,
+//     idTest: 2,
+//     testString: 'thisIsATest'
+//   }
+// }
+// console.log(axios.getUri(fakeConfig))

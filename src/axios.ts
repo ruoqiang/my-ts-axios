@@ -24,7 +24,7 @@ function createInstance(config: AxiosRequestConfig): AxiosStatic {
   const instance = Axios.prototype.request.bind(context)
 
   extend(instance, context)
-
+  debugger
   return instance as AxiosStatic
   // return instance as AxiosStatic
 }
