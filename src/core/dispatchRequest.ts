@@ -40,9 +40,9 @@ export function transformURL(config: AxiosRequestConfig): string {
   return bulidURL(url!, params, paramsSerializer)
 }
 
-function transformRequestData(config: AxiosRequestConfig): any {
-  return transformRequest(config.data)
-}
+// function transformRequestData(config: AxiosRequestConfig): any {
+//   return transformRequest(config.data)
+// }
 
 // function transformHeaders (config: AxiosRequestConfig) {
 //   const { headers = {}, data } = config

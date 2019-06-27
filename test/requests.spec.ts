@@ -221,4 +221,30 @@ describe('request', () => {
   // jest 非常好地支持异步测试代码。通常有 2 种解决方案。
   // 第一种是利用 done 参数，每个测试用例函数有一个 done 参数，一旦我们使用了该参数，只有当 done 函数执行的时候表示这个测试用例结束。
   // 第二种是我们的测试函数返回一个 Promise 对象，一旦这个 Promise 对象 resolve 了，表示这个测试结束
+
+  test('should support array buffer response', () => {
+    function str2ab(str: string) {
+      const buff = new ArrayBuffer(str.length * 2)
+      const view = new Uint16Array(buff)
+
+      for (let i = 0; i < str.length; i++) {
+        view[i] = str.charCodeAt(i)
+      }
+      return buff
+    }
+    axios('/foo', {
+      responseType: 'arraybuffer'
+    }).then(res => {
+      expect(res.data.byteLength).toBe(22)
+      // console.log(res.data.byteLength);
+    })
+
+    return getAjaxRequest().then(request => {
+      request.respondWith({
+        status: 200,
+        // @ts-ignore
+        response: str2ab('Hello world')
+      })
+    })
+  })
 })

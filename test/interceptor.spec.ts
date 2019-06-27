@@ -224,7 +224,7 @@ describe('interceptors', () => {
       })
 
       setTimeout(() => {
-        expect(response.data).toBe('OK13e')
+        expect(response.data).toBe('OK13')
         done()
       }, 100)
     })

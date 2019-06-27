@@ -28,7 +28,8 @@ function deepMergeStrat(val1: any, val2: any): any {
   } else if (isPlainObject(val1)) {
     // val2不存在且排查val2是isPlainObject的情况
     return deepMerge(val1) // 注意这里少了return的坑
-  } else if (typeof val1 !== 'undefined') {
+  } else {
+    // else if (typeof val1 !== 'undefined') {  改成else
     return val1
   }
 }
