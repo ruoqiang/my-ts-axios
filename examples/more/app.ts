@@ -17,14 +17,14 @@ axios.get('/more/get',{
 //   console.log(res)
 // })
 
-// const instance = axios.create({
-//     xsrfCookieName: 'XSRF-TOKEN-D',
-//     xsrfHeaderName: 'X-XSRF-TOKEN-D'
-//   })
+const instance = axios.create({
+    xsrfCookieName: 'XSRF-TOKEN-D',
+    xsrfHeaderName: 'X-XSRF-TOKEN-D'
+  })
   
-//   instance.get('/more/get').then(res => {
-//     console.log(res)
-//   })
+  instance.get('/more/get').then(res => {
+    console.log(res)
+  })
 
 // const instance = axios.create()
 

@@ -24,8 +24,8 @@ const defaults: AxiosRequestConfig = {
       return transformResponse(data)
     }
   ],
-  xsrfCookieName: 'XSRF_TOKEN',
-  xsrfHeaderName: 'X-XSRF_TOKEN',
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
 
   validateStatus(status: number): boolean {
     return status >= 200 && status < 300
